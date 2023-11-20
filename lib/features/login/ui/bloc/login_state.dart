@@ -4,12 +4,11 @@ class LoginState {
   LoginState();
 }
 
-class LoginInitial extends LoginState {}
+class LoginInitialState extends LoginState {}
 
-class Loading extends LoginState {}
+class LoginLoadingState extends LoginState {}
 
-class Logged extends LoginState {
+class LoginLoggedState extends LoginState {
   final DataUsuario dataUsuario;
-
-  Logged({required this.dataUsuario});
+  LoginLoggedState({required this.dataUsuario});
 }

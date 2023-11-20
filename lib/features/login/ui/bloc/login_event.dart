@@ -2,11 +2,10 @@ class LoginEvent {
   LoginEvent();
 }
 
-class InitialEventLogin extends LoginEvent {}
+class LoginInitialEvent extends LoginEvent {}
 
-class SignIn extends LoginEvent {
+class LoginSignInEvent extends LoginEvent {
   final int codigo;
   final String nombre;
-
-  SignIn({required this.codigo, required this.nombre});
+  LoginSignInEvent({required this.codigo, required this.nombre});
 }

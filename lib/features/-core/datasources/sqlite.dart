@@ -1,5 +1,3 @@
-import 'dart:io';
-import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -12,23 +10,6 @@ class ClientSQLite {
 
   initDataBase() async {
     String path = join(await getDatabasesPath(), "DataBase_CeluWeb.db");
-
-    bool exists = await databaseExists(path);
-    if (!exists) {
-      // SE CREA LA DB CON LA COPIA EN ASSETS //
-      try {
-        await Directory(dirname(path)).create(recursive: true);
-        // ignore: empty_catches
-      } catch (e) {}
-      ByteData data =
-          await rootBundle.load(url.join("assets", "DataBase_CeluWeb.db"));
-      List<int> bytes =
-          data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
-
-      await File(path).writeAsBytes(bytes, flush: true);
-    }
-    // SE ABRE LA DB //
-
     return await openDatabase(
       version: 2,
       path,
@@ -39,4 +20,3 @@ class ClientSQLite {
     );
   }
 }
-

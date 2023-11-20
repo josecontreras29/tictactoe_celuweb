@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:tictactoe_celuweb/features/home/ui/views/home_view.dart';
 import 'package:tictactoe_celuweb/features/login/ui/bloc/imports_login_bloc.dart';
 
 import '../../../-config/constants/images.dart';
+import '../../../home/ui/bloc/imports_home_bloc.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -22,14 +24,16 @@ class _LoginPageState extends State<LoginPage> {
                 decoration: BoxDecoration(color: Colors.grey[300]!),
                 child: BlocConsumer<LoginBloc, LoginState>(
                   builder: (context, state) {
-                    if (state is LoginInitial) {
+                    if (state is LoginInitialState) {
                       return const LoginView();
-                    } else if (state is Loading) {
+                    } else if (state is LoginLoadingState) {
                       return const Center(
                           child: CircularProgressIndicator(
                               color: Colors.black, strokeWidth: 6));
-                    } else if (state is Logged) {
-                      return HomeView(dataUsuario: state.dataUsuario);
+                    } else if (state is LoginLoggedState) {
+                      context.read<HomeBloc>().add(
+                          HomeInitialDataEvent(dataUsuario: state.dataUsuario));
+                      return HomeView();
                     } else {
                       return const LoginView();
                     }
@@ -62,7 +66,7 @@ class _LoginViewState extends State<LoginView> {
   @override
   void initState() {
     loginBloc = context.read<LoginBloc>();
-    loginBloc.add(InitialEventLogin());
+    loginBloc.add(LoginInitialEvent());
     super.initState();
   }
 
@@ -129,7 +133,7 @@ class _LoginViewState extends State<LoginView> {
                       child: ElevatedButton(
                           onPressed: () {
                             if (_formField.currentState!.validate()) {
-                              loginBloc.add(SignIn(
+                              loginBloc.add(LoginSignInEvent(
                                   codigo: int.parse(controllerCodigo.text),
                                   nombre: controllerNombre.text));
                             }

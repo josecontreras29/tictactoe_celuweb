@@ -1,16 +1,39 @@
-// ignore_for_file: file_names
-
+import '../../../login/domain/entities/data_usuario.dart';
+import '../reusable_widgets.dart/celda_matriz_juego.dart';
 import '../views/home_view.dart';
 
 class HomeEvent {
   HomeEvent();
 }
 
-class InitialEventHome extends HomeEvent {}
+class HomeInitialEvent extends HomeEvent {}
 
-class UpdateDataTablero extends HomeEvent {
-  final Players player;
-  final int partidasJugadas;
+class HomeInitialDataEvent extends HomeEvent {
+  final DataUsuario dataUsuario;
+  HomeInitialDataEvent({required this.dataUsuario});
+}
 
-  UpdateDataTablero({required this.player, required this.partidasJugadas});
+class HomeUpdateDataTableroEvent extends HomeEvent {
+  final int codigo;
+
+  HomeUpdateDataTableroEvent({required this.codigo});
+}
+
+class HomeCheckGameIsCompletedEvent extends HomeEvent {
+  final List<CeldaMatriz> listaCeldas;
+  HomeCheckGameIsCompletedEvent({required this.listaCeldas});
+}
+
+class HomeUpdateDataUsuarioEvent extends HomeEvent {
+  final DataUsuario actualDataUsuario;
+  final Player winner;
+
+  HomeUpdateDataUsuarioEvent(
+      {required this.actualDataUsuario, required this.winner});
+}
+
+class HomeChangeTurnEvent extends HomeEvent {
+  final Player player;
+
+  HomeChangeTurnEvent({required this.player});
 }

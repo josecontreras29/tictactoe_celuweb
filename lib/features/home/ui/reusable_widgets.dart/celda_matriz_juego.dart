@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
 
+import '../views/home_view.dart';
+
 // ignore: must_be_immutable
 class CeldaMatriz extends StatefulWidget {
   CeldaMatriz(
       {super.key,
-      required this.valueCell,
+      required this.actualValue,
+      required this.color,
+      required this.enabled,
       required this.action,
       required this.update});
   final Function action;
   Function update;
-  String valueCell;
+  Player actualValue;
+  bool enabled;
+  Color color;
   @override
   State<CeldaMatriz> createState() => _CeldaMatrizState();
 }
@@ -29,12 +35,14 @@ class _CeldaMatrizState extends State<CeldaMatriz> {
   Widget build(BuildContext context) {
     return InkWell(
         onHover: (value) {
-          setState(() {
-            isHovered = widget.valueCell == "" ? value : false;
-          });
+          if (widget.enabled) {
+            setState(() {
+              isHovered = widget.actualValue == Player.none ? value : false;
+            });
+          }
         },
         onTap: () async {
-          if (widget.valueCell == "") {
+          if (widget.enabled && widget.actualValue == Player.none) {
             await widget.action();
             setState(() {});
           }
@@ -43,9 +51,18 @@ class _CeldaMatrizState extends State<CeldaMatriz> {
           height: 50,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-              color: isHovered ? Colors.orange : Colors.transparent,
+              color: widget.enabled
+                  ? isHovered
+                      ? Colors.orange
+                      : widget.color
+                  : widget.color,
               border: Border.all(color: Colors.black, width: 2)),
-          child: Text(widget.valueCell,
+          child: Text(
+              widget.actualValue == Player.player
+                  ? "X"
+                  : widget.actualValue == Player.cpu
+                      ? "O"
+                      : "",
               style: Theme.of(context).textTheme.headlineSmall),
         ));
   }

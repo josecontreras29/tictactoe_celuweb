@@ -1,47 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tictactoe_celuweb/features/home/ui/reusable_widgets.dart/ok_button_dialog.dart';
 
 import '../../../login/domain/entities/data_usuario.dart';
+import '../../../login/ui/bloc/imports_login_bloc.dart';
+import '../../../login/ui/views/login_view.dart';
 import '../bloc/imports_home_bloc.dart';
 import '../reusable_widgets.dart/background_login.dart';
 import '../reusable_widgets.dart/celda_matriz_juego.dart';
+import '../reusable_widgets.dart/ok_button_dialog.dart';
 import 'tablero.dart';
 
-enum Players { player, cpu }
+enum Player { player, cpu, none }
 
-class HomeView extends StatefulWidget {
-  const HomeView({super.key, required this.dataUsuario});
+class HomeView extends StatelessWidget {
+  HomeView({super.key});
 
-  final DataUsuario dataUsuario;
-
-  @override
-  State<HomeView> createState() => _HomeViewState();
-}
-
-class _HomeViewState extends State<HomeView> {
   List<CeldaMatriz> listaCeldas = [];
-  int counter = 0;
-  late HomeBloc homeBloc = context.read<HomeBloc>();
+  int counterTurn = 0;
+  Player turn = Player.player;
+  late DataUsuario dataUsuario;
 
-  bool _validateFreeCells() {
-    for (var element in listaCeldas) {
-      if (element.valueCell == "") {
-        return true;
-      }
+  void _resetGame() {
+    for (var celda in listaCeldas) {
+      celda.actualValue = Player.none;
+      celda.color = Colors.transparent;
+      celda.enabled = true;
+      celda.update();
     }
-    return false;
   }
 
-  _resetGame() {
-    for (var element in listaCeldas) {
-      element.valueCell = "";
-      element.update();
+  void _changeColorWinnerCells(List<int> winnerCells) {
+    for (var celda in listaCeldas) {
+      if (winnerCells.contains(listaCeldas.indexOf(celda))) {
+        celda.color = Colors.green;
+        celda.update();
+      }
+      celda.enabled = false;
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    HomeBloc homeBloc = context.read<HomeBloc>();
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.grey[300]!,
@@ -53,57 +53,81 @@ class _HomeViewState extends State<HomeView> {
                 child: Column(
                   children: [
                     BlocConsumer<HomeBloc, HomeState>(
-                      builder: (context, state) {
-                        if (state is UpdatedTablero) {
-                          return Tablero(
-                              dataUsuario: widget.dataUsuario,
-                              player: state.player,
-                              partidasJugadas: state.partidasJugadas);
-                        } else {
-                          return Tablero(
-                              dataUsuario: widget.dataUsuario,
-                              player: Players.player,
-                              partidasJugadas: 0);
-                        }
+                      buildWhen: (previous, current) {
+                        return current is! HomeGameCompletedState &&
+                            current is! HomeUpdateDataUsuarioState;
                       },
                       listener: (context, state) {},
-                    ),
-                    BackgroundLogin(
-                      child: SizedBox(
-                        width: 300,
-                        height: 300,
-                        child: GridView.count(
-                          crossAxisCount: 3,
-                          children: List.generate(9, (index) {
-                            listaCeldas.add(CeldaMatriz(
-                              update: () {},
-                              valueCell: "",
-                              action: () async {
-                                listaCeldas[index].valueCell =
-                                    counter.isEven ? "X" : "O";
-                                bool stillPlaying = _validateFreeCells();
-                                homeBloc.add(UpdateDataTablero(
-                                    player: counter.isEven
-                                        ? Players.cpu
-                                        : Players.player,
-                                    partidasJugadas: stillPlaying
-                                        ? widget.dataUsuario.partidasJugadas
-                                        : widget.dataUsuario.partidasJugadas +
-                                            1));
+                      builder: (context, state) {
+                        if (state is HomeInitialDataState) {
+                          dataUsuario = state.dataUsuario;
 
-                                counter++;
-                                !stillPlaying
-                                    ? await okButton(context,
-                                        "Bien jugado, intenta otra vez")
-                                    : null;
-                                !stillPlaying ? _resetGame() : null;
-                              },
-                            ));
-                            return listaCeldas[index];
-                          }),
-                        ),
-                      ),
+                          return Tablero(
+                              dataUsuario: state.dataUsuario, turn: turn);
+                        } else if (state is HomeUpdatedTableroState) {
+                          dataUsuario = state.dataUsuario;
+                          return Tablero(
+                              dataUsuario: state.dataUsuario, turn: turn);
+                        } else if (state is HomeChangeTurnState) {
+                          turn = state.player;
+                          return Tablero(
+                              dataUsuario: dataUsuario, turn: state.player);
+                        } else {
+                          return const SizedBox();
+                        }
+                      },
                     ),
+                    BlocConsumer<HomeBloc, HomeState>(
+                      buildWhen: (previous, current) {
+                        return current is HomeGameCompletedState;
+                      },
+                      listener: (context, state) async {
+                        if (state is HomeGameCompletedState) {
+                          _changeColorWinnerCells(state.listWinnersIndex);
+                          homeBloc.add(HomeUpdateDataUsuarioEvent(
+                              winner: state.winner,
+                              actualDataUsuario: dataUsuario));
+                          homeBloc.add(HomeUpdateDataTableroEvent(
+                              codigo: dataUsuario.codigo));
+                          okButton(context,
+                              "Good game, ${state.winner == Player.player ? 'You' : 'CPU'} win");
+                        }
+                      },
+                      builder: (context, state) {
+                        return BackgroundLogin(
+                          child: SizedBox(
+                            width: 300,
+                            height: 300,
+                            child: GridView.count(
+                              crossAxisCount: 3,
+                              children: List.generate(9, (index) {
+                                listaCeldas.add(CeldaMatriz(
+                                  update: () {},
+                                  enabled: true,
+                                  color: Colors.transparent,
+                                  actualValue: Player.none,
+                                  action: () async {
+                                    listaCeldas[index].actualValue = turn;
+                                    turn = turn == Player.player
+                                        ? Player.cpu
+                                        : Player.player;
+
+                                    homeBloc.add(HomeCheckGameIsCompletedEvent(
+                                        listaCeldas: listaCeldas));
+                                    homeBloc
+                                        .add(HomeChangeTurnEvent(player: turn));
+                                  },
+                                ));
+                                return listaCeldas[index];
+                              }),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    ElevatedButton(
+                        onPressed: () => _resetGame(),
+                        child: const Text("Play again")),
                   ],
                 ),
               ),
