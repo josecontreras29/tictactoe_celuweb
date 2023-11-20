@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../../-config/themes/title_themes.dart';
 import '../../../login/domain/entities/data_usuario.dart';
-import '../reusable_widgets.dart/background_login.dart';
 import 'home_view.dart';
 
 class Tablero extends StatelessWidget {

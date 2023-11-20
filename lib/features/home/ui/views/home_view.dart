@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../login/domain/entities/data_usuario.dart';
-import '../../../login/ui/bloc/imports_login_bloc.dart';
-import '../../../login/ui/views/login_view.dart';
 import '../bloc/imports_home_bloc.dart';
 import '../reusable_widgets.dart/background_login.dart';
 import '../reusable_widgets.dart/celda_matriz_juego.dart';

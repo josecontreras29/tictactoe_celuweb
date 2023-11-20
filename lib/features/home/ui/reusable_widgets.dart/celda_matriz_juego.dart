@@ -63,7 +63,12 @@ class _CeldaMatrizState extends State<CeldaMatriz> {
                   : widget.actualValue == Player.cpu
                       ? "O"
                       : "",
-              style: Theme.of(context).textTheme.headlineSmall),
+              style: TextStyle(
+                  color: widget.actualValue == Player.player
+                      ? Colors.red
+                      : Colors.blue,
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold)),
         ));
   }
 }
