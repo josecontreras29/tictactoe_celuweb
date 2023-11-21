@@ -14,12 +14,12 @@ enum Player { player, cpu, none }
 // ignore: must_be_immutable
 class HomeView extends StatelessWidget {
   HomeView({super.key});
+
   List<CeldaMatriz> listaCeldas = [];
   Player actualTurn = Player.player;
   late DataUsuario dataUsuario;
 
-  void _changeColorWinnerCells(
-      List<int> winnerCells ) {
+  void _changeColorWinnerCells(List<int> winnerCells) {
     for (CeldaMatriz celda in listaCeldas) {
       if (winnerCells.contains(listaCeldas.indexOf(celda))) {
         celda.color = Colors.green;
@@ -50,9 +50,9 @@ class HomeView extends StatelessWidget {
                 children: [
                   BlocBuilder<HomeBloc, HomeState>(
                     buildWhen: (previous, current) {
-                      return current is! HomeGameCompletedState &&
-                          current is! HomeSaveDataUsuarioState &&
-                          current is! HomeClearListCellsState;
+                      return current is HomeInitialDataState ||
+                          current is HomeUpdatedTableroState ||
+                          current is HomeChangeTurnState;
                     },
                     builder: (context, state) {
                       if (state is HomeInitialDataState) {

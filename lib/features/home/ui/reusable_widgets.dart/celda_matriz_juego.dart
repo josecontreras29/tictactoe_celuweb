@@ -32,7 +32,7 @@ class _CeldaMatrizState extends State<CeldaMatriz> {
             setState(() {
               isHovered = widget.actualValue == Player.none ? value : false;
             });
-          } else if (!widget.enabled) {
+          } else {
             setState(() {
               isHovered = false;
             });
