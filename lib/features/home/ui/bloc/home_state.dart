@@ -1,5 +1,4 @@
 import '../../../login/domain/entities/data_usuario.dart';
-import '../reusable_widgets.dart/celda_matriz_juego.dart';
 import '../views/home_view.dart';
 
 class HomeState {
