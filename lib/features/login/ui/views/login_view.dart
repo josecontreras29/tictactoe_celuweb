@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:tictactoe_celuweb/features/home/ui/views/home_view.dart';
-import 'package:tictactoe_celuweb/features/login/ui/bloc/imports_login_bloc.dart';
-
 import '../../../-config/constants/images.dart';
 import '../../../home/ui/bloc/imports_home_bloc.dart';
+import '../../../home/ui/views/home_view.dart';
+import '../bloc/imports_login_bloc.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -20,7 +19,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-            body: BlocConsumer<LoginBloc, LoginState>(
+            body: BlocBuilder<LoginBloc, LoginState>(
       builder: (context, state) {
         if (state is LoginInitialState) {
           return const LoginView();
@@ -37,7 +36,6 @@ class _LoginPageState extends State<LoginPage> {
           return const LoginView();
         }
       },
-      listener: (context, state) {},
     )));
   }
 }
@@ -91,7 +89,7 @@ class _LoginViewState extends State<LoginView> {
                       child: TextFormField(
                         keyboardType: TextInputType.number,
                         style:
-                            const TextStyle(fontSize: 14, color: Colors.white),
+                            const TextStyle(fontSize: 14, color: Colors.black),
                         controller: controllerCodigo,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         decoration: const InputDecoration(labelText: "Codigo"),
@@ -111,7 +109,7 @@ class _LoginViewState extends State<LoginView> {
                       child: TextFormField(
                         keyboardType: TextInputType.name,
                         style:
-                            const TextStyle(fontSize: 14, color: Colors.white),
+                            const TextStyle(fontSize: 14, color: Colors.black),
                         controller: controllerNombre,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         decoration: const InputDecoration(labelText: "Nombre"),

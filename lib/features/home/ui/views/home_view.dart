@@ -11,11 +11,11 @@ import 'tablero.dart';
 
 enum Player { player, cpu, none }
 
+// ignore: must_be_immutable
 class HomeView extends StatelessWidget {
   HomeView({super.key});
 
   List<CeldaMatriz> listaCeldas = [];
-  int counterTurn = 0;
   Player turn = Player.player;
   late DataUsuario dataUsuario;
 
@@ -55,12 +55,11 @@ class HomeView extends StatelessWidget {
               constraints: const BoxConstraints(maxWidth: 600),
               child: Column(
                 children: [
-                  BlocConsumer<HomeBloc, HomeState>(
+                  BlocBuilder<HomeBloc, HomeState>(
                     buildWhen: (previous, current) {
                       return current is! HomeGameCompletedState &&
                           current is! HomeUpdateDataUsuarioState;
                     },
-                    listener: (context, state) {},
                     builder: (context, state) {
                       if (state is HomeInitialDataState) {
                         dataUsuario = state.dataUsuario;

@@ -2,9 +2,9 @@ import '../../home/ui/reusable_widgets.dart/celda_matriz_juego.dart';
 import '../../home/ui/views/home_view.dart';
 
 class CheckStatusGame {
-  final List<CeldaMatriz> listaCeldas;
-
   CheckStatusGame({required this.listaCeldas});
+
+  final List<CeldaMatriz> listaCeldas;
 
   DatosGanador verifyHorizontals() {
     for (int i = 0; i < 9; i++) {
@@ -77,6 +77,5 @@ class CheckStatusGame {
 class DatosGanador {
   final List<int> celdasGanadoras;
   final Player winner;
-
   DatosGanador({required this.celdasGanadoras, required this.winner});
 }

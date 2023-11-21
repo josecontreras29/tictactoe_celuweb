@@ -1,5 +1,3 @@
-
- 
 import '../../../-core/usecases/usecase.dart';
 import '../../../login/domain/entities/data_usuario.dart';
 import '../repositories/home_repository.dart';

@@ -1,6 +1,6 @@
-import 'package:tictactoe_celuweb/features/home/infraestructure/models/get_data_usuario_tablero.dart';
 import '../../../-core/datasources/sqlite.dart';
 import '../../../login/domain/entities/data_usuario.dart';
+import '../models/get_data_usuario_tablero.dart';
 import '../models/save_data_usuario_model.dart';
 
 abstract class HomeDataSource {

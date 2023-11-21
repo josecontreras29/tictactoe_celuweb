@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tictactoe_celuweb/features/-core/datasources/check_status_game.dart';
-import 'package:tictactoe_celuweb/features/home/domain/usecases/get_data_usuario_tablero_usecase.dart';
 
+import '../../../-core/datasources/check_status_game.dart';
 import '../../../login/domain/entities/data_usuario.dart';
+import '../../domain/usecases/get_data_usuario_tablero_usecase.dart';
 import '../../domain/usecases/save_data_usuario_usecase.dart';
 import '../views/home_view.dart';
 import 'imports_home_bloc.dart';

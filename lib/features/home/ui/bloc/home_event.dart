@@ -15,7 +15,6 @@ class HomeInitialDataEvent extends HomeEvent {
 
 class HomeUpdateDataTableroEvent extends HomeEvent {
   final int codigo;
-
   HomeUpdateDataTableroEvent({required this.codigo});
 }
 
@@ -27,13 +26,11 @@ class HomeCheckGameIsCompletedEvent extends HomeEvent {
 class HomeUpdateDataUsuarioEvent extends HomeEvent {
   final DataUsuario actualDataUsuario;
   final Player winner;
-
   HomeUpdateDataUsuarioEvent(
       {required this.actualDataUsuario, required this.winner});
 }
 
 class HomeChangeTurnEvent extends HomeEvent {
   final Player player;
-
   HomeChangeTurnEvent({required this.player});
 }

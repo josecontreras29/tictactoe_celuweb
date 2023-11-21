@@ -58,12 +58,11 @@ class Tablero extends StatelessWidget {
                   flex: 1,
                   child: Column(
                     children: [
-                      Icon(
-                        Icons.computer,
-                        size: 36,
-                        color:
-                            turn == Player.cpu ? Colors.yellow : Colors.black,
-                      ),
+                      Icon(Icons.computer,
+                          size: 36,
+                          color: turn == Player.cpu
+                              ? Colors.yellow
+                              : Colors.black),
                       Text("CPU",
                           style: TextStyle(
                               fontWeight: FontWeight.bold,

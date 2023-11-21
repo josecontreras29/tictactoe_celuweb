@@ -1,6 +1,5 @@
-import 'package:tictactoe_celuweb/features/login/domain/entities/data_usuario.dart';
-
 import '../../../-core/params/login_params.dart';
+import '../../domain/entities/data_usuario.dart';
 import '../../domain/repositories/login_repository.dart';
 import '../datasource/login_datasource.dart';
 
