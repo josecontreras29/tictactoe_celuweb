@@ -20,26 +20,25 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-            body: Container(
-                decoration: BoxDecoration(color: Colors.grey[300]!),
-                child: BlocConsumer<LoginBloc, LoginState>(
-                  builder: (context, state) {
-                    if (state is LoginInitialState) {
-                      return const LoginView();
-                    } else if (state is LoginLoadingState) {
-                      return const Center(
-                          child: CircularProgressIndicator(
-                              color: Colors.black, strokeWidth: 6));
-                    } else if (state is LoginLoggedState) {
-                      context.read<HomeBloc>().add(
-                          HomeInitialDataEvent(dataUsuario: state.dataUsuario));
-                      return HomeView();
-                    } else {
-                      return const LoginView();
-                    }
-                  },
-                  listener: (context, state) {},
-                ))));
+            body: BlocConsumer<LoginBloc, LoginState>(
+      builder: (context, state) {
+        if (state is LoginInitialState) {
+          return const LoginView();
+        } else if (state is LoginLoadingState) {
+          return const Center(
+              child: CircularProgressIndicator(
+                  color: Colors.black, strokeWidth: 6));
+        } else if (state is LoginLoggedState) {
+          context
+              .read<HomeBloc>()
+              .add(HomeInitialDataEvent(dataUsuario: state.dataUsuario));
+          return HomeView();
+        } else {
+          return const LoginView();
+        }
+      },
+      listener: (context, state) {},
+    )));
   }
 }
 
@@ -85,19 +84,17 @@ class _LoginViewState extends State<LoginView> {
                 children: <Widget>[
                   SizedBox(
                       width: 150,
-                      child: Image.asset(ImagesLogin.iconLogin,
-                          fit: BoxFit.cover)),
+                      child:
+                          Image.asset(ImagesApp.iconLogin, fit: BoxFit.cover)),
                   Container(
                       margin: const EdgeInsets.only(top: 60),
                       child: TextFormField(
                         keyboardType: TextInputType.number,
-                        style: const TextStyle(fontSize: 14),
+                        style:
+                            const TextStyle(fontSize: 14, color: Colors.white),
                         controller: controllerCodigo,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
-                        decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.grey[200]!,
-                            labelText: "Codigo"),
+                        decoration: const InputDecoration(labelText: "Codigo"),
                         validator: (value) {
                           if (value!.isEmpty) {
                             return "Por favor ingresa un codigo (números)";
@@ -113,13 +110,11 @@ class _LoginViewState extends State<LoginView> {
                       margin: const EdgeInsets.only(top: 30),
                       child: TextFormField(
                         keyboardType: TextInputType.name,
-                        style: const TextStyle(fontSize: 14),
+                        style:
+                            const TextStyle(fontSize: 14, color: Colors.white),
                         controller: controllerNombre,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
-                        decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.grey[200]!,
-                            labelText: "Nombre"),
+                        decoration: const InputDecoration(labelText: "Nombre"),
                         validator: (value) {
                           if (value!.isEmpty) {
                             return "Por favor ingresa un nombre";

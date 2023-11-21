@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class BackgroundLogin extends StatelessWidget {
-  const BackgroundLogin({super.key, required this.child});
+class BackgroundTablero extends StatelessWidget {
+  const BackgroundTablero({super.key, required this.child});
   final Widget child;
   @override
   Widget build(BuildContext context) {
@@ -9,8 +9,9 @@ class BackgroundLogin extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: 10),
         child: Center(
             child: Container(
+                padding: const EdgeInsets.all(5),
                 decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Colors.deepPurple[300],
                     borderRadius: BorderRadius.circular(5),
                     boxShadow: [
                       BoxShadow(
@@ -18,7 +19,6 @@ class BackgroundLogin extends StatelessWidget {
                           spreadRadius: 1,
                           blurRadius: 3)
                     ]),
-                padding: const EdgeInsets.all(30),
                 child: child)));
   }
 }

@@ -50,13 +50,15 @@ class _CeldaMatrizState extends State<CeldaMatriz> {
         child: Container(
           height: 50,
           alignment: Alignment.center,
+          margin: const EdgeInsets.all(2),
           decoration: BoxDecoration(
               color: widget.enabled
                   ? isHovered
                       ? Colors.orange
                       : widget.color
                   : widget.color,
-              border: Border.all(color: Colors.black, width: 2)),
+              border: Border.all(color: Colors.black, width: 3),
+              borderRadius: BorderRadius.circular(5)),
           child: Text(
               widget.actualValue == Player.player
                   ? "X"
@@ -66,9 +68,9 @@ class _CeldaMatrizState extends State<CeldaMatriz> {
               style: TextStyle(
                   color: widget.actualValue == Player.player
                       ? Colors.red
-                      : Colors.blue,
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold)),
+                      : Colors.yellow,
+                  fontSize: 60,
+                  fontWeight: FontWeight.w900)),
         ));
   }
 }

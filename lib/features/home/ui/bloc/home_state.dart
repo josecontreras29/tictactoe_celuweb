@@ -28,6 +28,11 @@ class HomeGameCompletedState extends HomeState {
       {required this.listWinnersIndex, required this.winner});
 }
 
+class HomeEmpateState extends HomeState {
+  final Player winner;
+  HomeEmpateState({required this.winner});
+}
+
 class HomeUpdateDataUsuarioState extends HomeState {}
 
 class HomeChangeTurnState extends HomeState {
