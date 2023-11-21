@@ -69,7 +69,9 @@ class _CeldaMatrizState extends State<CeldaMatriz> {
                   color: widget.actualValue == Player.player
                       ? Colors.red
                       : Colors.yellow,
-                  fontSize: 60,
+                  fontSize: MediaQuery.of(context).size.width < 400
+                      ? MediaQuery.of(context).size.width * 0.15
+                      : 60,
                   fontWeight: FontWeight.w900)),
         ));
   }
