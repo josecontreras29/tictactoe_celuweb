@@ -1,4 +1,5 @@
 import '../../../login/domain/entities/data_usuario.dart';
+import '../reusable_widgets.dart/celda_matriz_juego.dart';
 import '../views/home_view.dart';
 
 class HomeState {
@@ -33,9 +34,11 @@ class HomeEmpateState extends HomeState {
   HomeEmpateState({required this.winner});
 }
 
-class HomeUpdateDataUsuarioState extends HomeState {}
+class HomeSaveDataUsuarioState extends HomeState {}
 
 class HomeChangeTurnState extends HomeState {
   final Player player;
   HomeChangeTurnState({required this.player});
 }
+
+class HomeClearListCellsState extends HomeState {}

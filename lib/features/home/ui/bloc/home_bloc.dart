@@ -19,8 +19,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<HomeInitialDataEvent>(homeInitialDataEvent);
     on<HomeUpdateDataTableroEvent>(homeUpdateDataTableroEvent);
     on<HomeCheckGameIsCompletedEvent>(homeCheckGameIsCompletedEvent);
-    on<HomeUpdateDataUsuarioEvent>(homeUpdateDataUsuarioEvent);
+    on<HomeSaveDataUsuarioEvent>(homeSaveDataUsuarioEvent);
     on<HomeChangeTurnEvent>(homeChangeTurnEvent);
+    on<HomeClearListCellsEvent>(homeClearListCellsEvent);
   }
 
   final SaveDataUsuarioUseCase _saveDataUsuarioUsecase;
@@ -43,8 +44,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   FutureOr<void> homeCheckGameIsCompletedEvent(
       HomeCheckGameIsCompletedEvent event, Emitter<HomeState> emit) {
-        
-    /// ALGORITMO DE FUERZA BRUTA - BACKTRACKING ///
     CheckStatusGame checkStatusGame =
         CheckStatusGame(listaCeldas: event.listaCeldas);
     DatosGanador checkHorizontals = checkStatusGame.verifyHorizontals();
@@ -66,11 +65,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     } else if (checkEmpate) {
       emit(HomeEmpateState(winner: Player.none));
     }
-  
   }
 
-  FutureOr<void> homeUpdateDataUsuarioEvent(
-      HomeUpdateDataUsuarioEvent event, Emitter<HomeState> emit) async {
+  FutureOr<void> homeSaveDataUsuarioEvent(
+      HomeSaveDataUsuarioEvent event, Emitter<HomeState> emit) async {
     DataUsuario newDataUser = DataUsuario(
         codigo: event.actualDataUsuario.codigo,
         nombre: event.actualDataUsuario.nombre,
@@ -83,12 +81,17 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             : event.actualDataUsuario.derrotas);
     final dataSaved = await _saveDataUsuarioUsecase.call(newDataUser);
     if (dataSaved.saved) {
-      emit(HomeUpdateDataUsuarioState());
+      emit(HomeSaveDataUsuarioState());
     }
   }
 
   FutureOr<void> homeChangeTurnEvent(
       HomeChangeTurnEvent event, Emitter<HomeState> emit) {
     emit(HomeChangeTurnState(player: event.player));
+  }
+
+  FutureOr<void> homeClearListCellsEvent(
+      HomeClearListCellsEvent event, Emitter<HomeState> emit) {
+    emit(HomeClearListCellsState());
   }
 }

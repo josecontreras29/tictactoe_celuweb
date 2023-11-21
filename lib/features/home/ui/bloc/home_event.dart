@@ -23,10 +23,10 @@ class HomeCheckGameIsCompletedEvent extends HomeEvent {
   HomeCheckGameIsCompletedEvent({required this.listaCeldas});
 }
 
-class HomeUpdateDataUsuarioEvent extends HomeEvent {
+class HomeSaveDataUsuarioEvent extends HomeEvent {
   final DataUsuario actualDataUsuario;
   final Player winner;
-  HomeUpdateDataUsuarioEvent(
+  HomeSaveDataUsuarioEvent(
       {required this.actualDataUsuario, required this.winner});
 }
 
@@ -34,3 +34,5 @@ class HomeChangeTurnEvent extends HomeEvent {
   final Player player;
   HomeChangeTurnEvent({required this.player});
 }
+
+class HomeClearListCellsEvent extends HomeEvent {}

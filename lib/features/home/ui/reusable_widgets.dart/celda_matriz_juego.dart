@@ -24,20 +24,17 @@ class _CeldaMatrizState extends State<CeldaMatriz> {
   bool isHovered = false;
 
   @override
-  void initState() {
-    widget.update = () {
-      setState(() {});
-    };
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    widget.update = () => setState(() {});
     return InkWell(
         onHover: (value) {
           if (widget.enabled) {
             setState(() {
               isHovered = widget.actualValue == Player.none ? value : false;
+            });
+          } else if (!widget.enabled) {
+            setState(() {
+              isHovered = false;
             });
           }
         },

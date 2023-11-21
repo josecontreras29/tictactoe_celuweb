@@ -17,6 +17,7 @@ class CheckStatusGame {
         } else if (listaCeldas[i].actualValue == Player.cpu &&
             listaCeldas[i + 1].actualValue == Player.cpu &&
             listaCeldas[i + 2].actualValue == Player.cpu) {
+    
           return DatosGanador(
               celdasGanadoras: [i, i + 1, i + 2], winner: Player.cpu);
         }

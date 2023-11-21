@@ -14,27 +14,20 @@ enum Player { player, cpu, none }
 // ignore: must_be_immutable
 class HomeView extends StatelessWidget {
   HomeView({super.key});
-
   List<CeldaMatriz> listaCeldas = [];
-  Player turn = Player.player;
+  Player actualTurn = Player.player;
   late DataUsuario dataUsuario;
 
-  void _resetGame() {
-    for (var celda in listaCeldas) {
-      celda.actualValue = Player.none;
-      celda.color = Colors.deepPurple[500]!;
-      celda.enabled = true;
-      celda.update();
-    }
-  }
-
-  void _changeColorWinnerCells(List<int> winnerCells) {
-    for (var celda in listaCeldas) {
+  void _changeColorWinnerCells(
+      List<int> winnerCells ) {
+    for (CeldaMatriz celda in listaCeldas) {
       if (winnerCells.contains(listaCeldas.indexOf(celda))) {
         celda.color = Colors.green;
         celda.update();
+      } else {
+        celda.enabled = false;
+        celda.update();
       }
-      celda.enabled = false;
     }
   }
 
@@ -58,19 +51,20 @@ class HomeView extends StatelessWidget {
                   BlocBuilder<HomeBloc, HomeState>(
                     buildWhen: (previous, current) {
                       return current is! HomeGameCompletedState &&
-                          current is! HomeUpdateDataUsuarioState;
+                          current is! HomeSaveDataUsuarioState &&
+                          current is! HomeClearListCellsState;
                     },
                     builder: (context, state) {
                       if (state is HomeInitialDataState) {
                         dataUsuario = state.dataUsuario;
                         return Tablero(
-                            dataUsuario: state.dataUsuario, turn: turn);
+                            dataUsuario: state.dataUsuario, turn: actualTurn);
                       } else if (state is HomeUpdatedTableroState) {
                         dataUsuario = state.dataUsuario;
                         return Tablero(
-                            dataUsuario: state.dataUsuario, turn: turn);
+                            dataUsuario: state.dataUsuario, turn: actualTurn);
                       } else if (state is HomeChangeTurnState) {
-                        turn = state.player;
+                        actualTurn = state.player;
                         return Tablero(
                             dataUsuario: dataUsuario, turn: state.player);
                       } else {
@@ -80,12 +74,12 @@ class HomeView extends StatelessWidget {
                   ),
                   BlocConsumer<HomeBloc, HomeState>(
                     buildWhen: (previous, current) {
-                      return current is HomeGameCompletedState;
+                      return current is HomeClearListCellsState;
                     },
                     listener: (context, state) async {
                       if (state is HomeGameCompletedState) {
                         _changeColorWinnerCells(state.listWinnersIndex);
-                        homeBloc.add(HomeUpdateDataUsuarioEvent(
+                        homeBloc.add(HomeSaveDataUsuarioEvent(
                             winner: state.winner,
                             actualDataUsuario: dataUsuario));
                         homeBloc.add(HomeUpdateDataTableroEvent(
@@ -93,7 +87,7 @@ class HomeView extends StatelessWidget {
                         okButton(context,
                             "Good game, ${state.winner == Player.player ? 'You' : 'CPU'} win ");
                       } else if (state is HomeEmpateState) {
-                        homeBloc.add(HomeUpdateDataUsuarioEvent(
+                        homeBloc.add(HomeSaveDataUsuarioEvent(
                             winner: state.winner,
                             actualDataUsuario: dataUsuario));
                         homeBloc.add(HomeUpdateDataTableroEvent(
@@ -108,21 +102,22 @@ class HomeView extends StatelessWidget {
                           width: 300,
                           child: GridView.count(
                             crossAxisCount: 3,
-                            children: List.generate(9, (index) {
+                            children: List<CeldaMatriz>.generate(9, (index) {
                               listaCeldas.add(CeldaMatriz(
                                 update: () {},
                                 enabled: true,
                                 color: Colors.deepPurple[500]!,
                                 actualValue: Player.none,
                                 action: () async {
-                                  listaCeldas[index].actualValue = turn;
-                                  turn = turn == Player.player
+                                  listaCeldas[index].actualValue = actualTurn;
+                                  listaCeldas[index].enabled = false;
+                                  actualTurn = actualTurn == Player.player
                                       ? Player.cpu
                                       : Player.player;
                                   homeBloc.add(HomeCheckGameIsCompletedEvent(
                                       listaCeldas: listaCeldas));
-                                  homeBloc
-                                      .add(HomeChangeTurnEvent(player: turn));
+                                  homeBloc.add(
+                                      HomeChangeTurnEvent(player: actualTurn));
                                 },
                               ));
                               return listaCeldas[index];
@@ -133,7 +128,10 @@ class HomeView extends StatelessWidget {
                     },
                   ),
                   ElevatedButton(
-                      onPressed: () => _resetGame(),
+                      onPressed: () {
+                        listaCeldas.clear();
+                        homeBloc.add(HomeClearListCellsEvent());
+                      },
                       child: const Text("Play again")),
                 ],
               ),
